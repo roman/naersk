@@ -150,15 +150,23 @@ rec
             cp ${cargolock'} $out/Cargo.lock
 
 
+            set -x
             echo "DEBUUUUUGGGGG ========="
             pushd "${srcPathStr}/${rootPathStr}"
-            for p in $patchedSources; do
+            for relPath in $patchedSources; do
+              echo "checking package"
+              pushd $relPath
+              p="$(realpath --relative-to=$relPath ${srcPathStr})"
+              pushd ${srcPathStr}
               echo "Copying patched source $p to $out..."
               cp --parents -R "$p" "$out/"
               ls -lah "$out/"
+              popd
+              popd
             done
             popd
             echo "DEBUUUUUGGGGG ========="
+            set +x
 
             for tuple in $cargotomlss; do
                 member="''${tuple%%:*}"
