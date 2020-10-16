@@ -153,7 +153,7 @@ rec
             pushd "${srcPathStr}"
             for p in $patchedSources; do
               echo "===== Debugging! ====="
-              ls -lah "$p"
+              ls -lah "${rootPathStr}/$p"
               echo "Copying patched source $p to $out..."
               cp --parents -R "${rootPathStr}/$p" "$out/"
             done
