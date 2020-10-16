@@ -148,6 +148,8 @@ rec
             cp ${cargolock'} $out/Cargo.lock
 
             echo "DEBUGGING ==== ${root} ===="
+            echo "$patchedSources"
+            ls -lah ${root}
             for p in $patchedSources; do
               echo "Copying patched source $p to $out..."
               cp -R "$p" "$out/"
