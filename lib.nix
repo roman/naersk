@@ -151,6 +151,7 @@ rec
 
 
             set -x
+            cat $out/Cargo.lock
             echo "DEBUUUUUGGGGG ========="
             pushd "${srcPathStr}/${rootPathStr}"
             for relPath in $patchedSources; do
@@ -160,6 +161,7 @@ rec
               pushd ${srcPathStr}
               echo "Copying patched source $p to $out..."
               cp --parents -R "$p" "$out/"
+              chmod -R +w $out
               ls -lah "$out/"
               popd
               popd
