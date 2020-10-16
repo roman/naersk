@@ -312,7 +312,7 @@ let
         mkRelative = po:
           if lib.hasPrefix "/" po.path
           then throw "'${toString src}/Cargo.toml' contains the absolute path '${toString po.path}' which is not allowed under a [patch] section by naersk. Please make it relative to '${toString src}'"
-          else src + "/" + rootPathStr + "/" po.path;
+          else src + "/" + rootPathStr + "/" + po.path;
       in
         lib.optionals (builtins.hasAttr "patch" toplevelCargotoml)
           (
