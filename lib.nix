@@ -148,7 +148,7 @@ rec
 
             for p in $patchedSources; do
               echo "Copying patched source $p to $out..."
-              cp -R "$p" "$out/"
+              cp --parents -R "$p" "$out/"
             done
 
             for tuple in $cargotomlss; do
