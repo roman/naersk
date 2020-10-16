@@ -150,16 +150,14 @@ rec
             cp ${cargolock'} $out/Cargo.lock
 
 
-            set +x
-            pushd "${srcPathStr}"
+            set -x
+            pushd "${srcPathStr}/${rootPathStr}"
             for p in $patchedSources; do
-              echo "===== Debugging! ====="
-              ls -lah "${rootPathStr}/$p"
               echo "Copying patched source $p to $out..."
-              cp --parents -R "${rootPathStr}/$p" "$out/"
+              cp --parents -R "$p" "$out/"
             done
             popd
-            set -x
+            set +x
 
             for tuple in $cargotomlss; do
                 member="''${tuple%%:*}"
