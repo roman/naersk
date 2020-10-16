@@ -146,7 +146,10 @@ rec
             ${lib.optionalString (! isNull cargoconfig) "cp ${config} $out/.cargo/config"}
             cp ${cargolock'} $out/Cargo.lock
 
+
             for p in $patchedSources; do
+              echo "===== Debugging! ====="
+              ls -lah "$p"
               echo "Copying patched source $p to $out..."
               cp --parents -R "$p" "$out/"
             done
