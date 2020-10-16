@@ -113,7 +113,8 @@ rec
 
   # A very minimal 'src' which makes cargo happy nonetheless
   dummySrc =
-    { cargoconfig   # string
+    { root
+    , cargoconfig   # string
     , cargotomls   # attrset
     , cargolock   # attrset
     , patchedSources # list of paths that should be copied to the output
@@ -146,9 +147,10 @@ rec
             ${lib.optionalString (! isNull cargoconfig) "cp ${config} $out/.cargo/config"}
             cp ${cargolock'} $out/Cargo.lock
 
+            echo "DEBUGGING ==== ${root} ===="
             for p in $patchedSources; do
               echo "Copying patched source $p to $out..."
-              cp --parents -R "$p" "$out/"
+              cp -R "$p" "$out/"
             done
 
             for tuple in $cargotomlss; do
