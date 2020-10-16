@@ -26,7 +26,7 @@ let
     root = attrs0.root or null;
     # Used by `naersk` to resolve dependencies on relative paths, this string is
     # needed to move relative packages on a repository
-    rootStr = attrs0.rootPath or null;
+    rootPathStr = attrs0.rootPathStr or null;
 
     # The command to use for the build.
     cargoBuild =
@@ -173,23 +173,23 @@ let
       hasSrc = ! isNull attrs.src;
       isPath = x: builtins.typeOf x == "path";
       root = attrs.root;
-      rootStr = if ! isNull attrs.rootStr then attrs.rootStr else ".";
+      rootPathStr = if ! isNull attrs.rootPathStr then attrs.rootPathStr else ".";
       src = attrs.src;
     in
       # src: yes, root: no
       if hasSrc && ! hasRoot then
         if isPath src then
-          { inherit rootStr; src = lib.cleanSource src; root = src; }
-        else { inherit rootStr src; root = src; }
+          { inherit rootPathStr; src = lib.cleanSource src; root = src; }
+        else { inherit rootPathStr src; root = src; }
         # src: yes, root: yes
       else if hasRoot && hasSrc then
-        { inherit src rootStr root; }
+        { inherit src rootPathStr root; }
         # src: no, root: yes
       else if hasRoot && ! hasSrc then
         if isPath root then
-          { inherit root rootStr; src = lib.cleanSource root; }
+          { inherit root rootPathStr; src = lib.cleanSource root; }
         else
-          { inherit root rootStr; src = root; }
+          { inherit root rootPathStr; src = root; }
         # src: no, root: yes
       else throw "please specify either 'src' or 'root'";
 
@@ -234,7 +234,7 @@ let
   # config used when planning the builds
   buildPlanConfig = rec {
     inherit userAttrs;
-    inherit (sr) src root rootStr;
+    inherit (sr) src root rootPathStr;
     # Whether we skip pre-building the deps
     isSingleStep = attrs.singleStep;
 
@@ -312,7 +312,7 @@ let
         mkRelative = po:
           if lib.hasPrefix "/" po.path
           then throw "'${toString src}/Cargo.toml' contains the absolute path '${toString po.path}' which is not allowed under a [patch] section by naersk. Please make it relative to '${toString src}'"
-          else src + "/" + rootStr + "/" po.path;
+          else src + "/" + rootPathStr + "/" po.path;
       in
         lib.optionals (builtins.hasAttr "patch" toplevelCargotoml)
           (
