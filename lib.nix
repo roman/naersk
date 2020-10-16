@@ -156,7 +156,7 @@ rec
             for relPath in $patchedSources; do
               echo "checking package"
               pushd $relPath
-              p="$(realpath --relative-to=$relPath ${srcPathStr})"
+              p="$(realpath --relative-to=. ${srcPathStr})"
               pushd ${srcPathStr}
               echo "Copying patched source $p to $out..."
               cp --parents -R "$p" "$out/"
