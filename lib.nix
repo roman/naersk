@@ -117,6 +117,9 @@ rec
     , cargotomls   # attrset
     , cargolock   # attrset
     , patchedSources # list of paths that should be copied to the output
+
+    , srcPathStr
+    , rootPathStr
     }:
       let
         config = writeText "config" cargoconfig;
@@ -147,12 +150,14 @@ rec
             cp ${cargolock'} $out/Cargo.lock
 
 
+            pushd "${srcPathStr}"
             for p in $patchedSources; do
               echo "===== Debugging! ====="
               ls -lah "$p"
               echo "Copying patched source $p to $out..."
-              cp --parents -R "$p" "$out/"
+              cp --parents -R "${rootPathStr}/$p" "$out/"
             done
+            popd
 
             for tuple in $cargotomlss; do
                 member="''${tuple%%:*}"

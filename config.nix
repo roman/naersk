@@ -307,16 +307,18 @@ let
       in
         lib.unique (lib.concatMap expandMember listedMembers);
 
+    srcPathStr = src + "/";
+
     patchedSources =
       let
-        mkRelative = po:
+        checkRelative = po:
           if lib.hasPrefix "/" po.path
           then throw "'${toString src}/Cargo.toml' contains the absolute path '${toString po.path}' which is not allowed under a [patch] section by naersk. Please make it relative to '${toString src}'"
-          else src + "/" + rootPathStr + "/" + po.path;
+          else po.path;
       in
         lib.optionals (builtins.hasAttr "patch" toplevelCargotoml)
           (
-            map mkRelative
+            map checkRelative
               (
                 lib.collect (as: lib.isAttrs as && builtins.hasAttr "path" as)
                   toplevelCargotoml.patch
